@@ -1,4 +1,4 @@
-# Understanding the C Memory Model and Process API
+# Understanding the C Memory Model and Multi-Processing
 
 ## Processes and Memory Models
 One fundamental feature of modern operating systems it the **Process** abstraction.
@@ -60,10 +60,10 @@ int main(int argc, char** argv){
 	int stackVar = 10; 		 //Stack variable
 
 	char* heapData = malloc(10 * sizeof(char)); //a pointer to the start of a memory segment 
-						//on the heap able to hold 10 char values
-						//NOTE: malloc does not initialize the data,
-						//whereas calloc initialized each block to zero.
-						//Otherwise malloc and calloc do the same thing.
+							//on the heap able to hold 10 char values
+							//NOTE: malloc does not initialize the data,
+							//whereas calloc initialized each block to zero.
+							//Otherwise malloc and calloc do the same thing.
     
 	free(heapData);  //returns (frees) the memory used by the heapData variable for future use
 
@@ -142,7 +142,7 @@ main(int _ac, char* _av[])
     printf("Before\n");
 
     if ((cpid = fork())) {
-		//this is the parent process running
+	//this is the parent process running
 
         printf("During\n");
 
@@ -152,7 +152,7 @@ main(int _ac, char* _av[])
         printf("After\n");
     }
     else {
-		//this is the child process running
+	//this is the child process running
         execlp("echo", "echo", "In", "subprocess", NULL);
         printf("Never get here.\n");
     }
@@ -187,6 +187,47 @@ Specifically, `waitpid()` takes in the child-process ID to wait for, which can b
 Say you want to run a program that is different from the current calling program. `exec()`, and a corresponding `c` wrapper function helps do just this.  In the above example, the program calls `execlp()`, which in turn call the program `echo` with the arguments `"echo", "In", "subprocess", NULL`.
 In the example, `echo` is a program to simple print out its argumets to the terminal.
 
+## Putting it all Together - A Case Study with a Unix Shell
+
+Take a look at the code of this [Unix style Shell](https://github.com/dmuller189/UnixShell), and specifically the nush.c file in the directory.  This file implements the basic feature of a Unix shell by using the `fork() wait(), and exex()` system call to demonstrate the power of these operatoins.
+
+The shell implements these following operators:
+ - Redirect input `<`  e.g. `$sort < foo.txt`
+ - Redirect outpu `>` e.g. `$sort foo.txt > output.txt`
+ - Pipe `|` e.g. `$sort foo.txt | uniq` (redirects left output into right input)
+ - Background `&` e.g. `$sleep 10 &`
+ - And `&&` e.g. `$true && echo one`
+ - Or `||` e.g. `$true || echo one`
+ - simple commands e.g. 
+ 	 - `$echo one`
+	 - `$cat foo.txt`
+	 - `$pwd`
+	 - `sort foo2.txt`
+	 - ...etc
+ 
+ Learn more about them [here](https://unix.meta.stackexchange.com/questions/3177/canonical-question-about-shell-operators)
+
+ Let's first focus on executing a command in the background.  Conceptually, the background shell operator does what it says; it runs a process in the backgrund and allows the user to continue using the shell to execute more commands. 
+
+ ```c
+ int backgroundCommand(ast* tree) { 
+    int cpid;
+
+    if((cpid = fork())) {
+    //parent         
+		return 0;	
+    } else {
+    //child
+   		execTree(tree->left);
+    		_exit(0);
+
+    }
+    return 0;
+}
+```
+The function argument is a pointer to an abstract syntax tree that represents the user's command, but dont wory about those details.  Notice how the functions creates the illusion of running a process in the background by simply forking, and then executing the command in the child process.  The `execTree()` function does this for us when in a child process.
 
 
-~~~~
+Let's take another slightly more complicated example.
+
+~~~
