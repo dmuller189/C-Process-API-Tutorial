@@ -1,0 +1,53 @@
+Dan Muller
+
+Mod 3 Reflective Memo
+
+
+I have written an instructional tutorial in the markdown format that describes the C memory model and process API.
+Specifically, I uploaded this file format to a public GitHub repository as a README.md where it renders according 
+to the syntax specified in the original file’s text.  The GitHub repository is open for anyone with an internet
+connection to view, but can easily be made private or special access only. /r I wrote this from the perspective
+of a computer science professor giving a primer on certain operating system features with demonstrable code for
+students learning about c programming and operating systems.  The tutorial works equally well from the perspective
+of an online educator posting reference material from Udemy, Ed-x, or an internal learning class from a company
+on-boarding new hires.  Learning about the C memory model and processes is standard material in OS courses,
+but often a difficult subject to gain proficiency.  It requires a fair amount of programming experience and c knowledge, 
+but the process API is small enough to encapsulate in a few lessons.  The reader will understand the power and 
+effectiveness of these tools after going through the tutorial, and will also learn a little about Linux shells 
+and memory allocation.
+
+Virtually all software students and professionals are familiar with Git and GitHub, which makes the platform ideal
+for posting my tutorial, as the reader will have a low learning curve to understanding the delivery mechanism of 
+the material.  GitHub also allows for easy code sharing and version control, therefore the learners can take the example 
+code I gave, and run it themselves on their machines to experiment and learn.  Users can also suggest improvements and 
+report defects in the code via GitHub’s pull request mechanism.  If someone finds a mistake in the code or information,
+I can easily merge their fix or upload my own changes without having to reload an entire document or file.  
+
+The prerequisites for my tutorial are therefore being able to navigate GitHub, basic to intermediate coding experience,
+and basic c programming concepts.  The reader should be familiar with c pointers, structs, syntax, and the concepts of 
+memory to reap the full benefit of the instructional.  I designed the instructional such that beginners can conceptually 
+understand and appreciate the content even if they may not be able to engineer tools using the knowledge.  I made sure to 
+bold and format special words and code examples to make the reading smooth, and so that it is easy to identify the meanings 
+of different sections and information blocks.  Beyond the most trivial terms such as memory, abstraction, file, and disk, 
+I bolded key words the reader should look up and internalize to fully understand the tutorial.  These words include important 
+functions, operating system mechanisms, and other valuable computer science terminology. Intertwined to textual descriptions 
+of the theory and underlying concepts, I added pictures and commented code examples to demonstrate how the theory comes 
+to light in c programming.  The code examples in the earlier sections are the simplest, and get increasing more complicated 
+as the tutorial progresses until I walk through a case study that combines the ideas presented into a sizeable project with 
+real applications.  By the end of the tutorial, the reader has the requisite knowledge to understand the case study, but will 
+have to spend much more time to fully understand its entirety.  The graphics throughout the tutorial are meant to help visualize 
+the theory and ground the reader with helpful mental models.  I chose to use the c language because it has the simplest and most 
+fundamental description about what I am trying to convey.  C is the de-facto language for systems programming, it has a long 
+history of use, and it has a large body of associated supplementary content for people to learn.  C is well documented, and a 
+prerequisite for anyone learning about operating systems.  Thanks to the .md file format, my code examples are easily 
+identifiable, and appear as they would in an editor with color formatting.
+
+The case study I present towards the end of the tutorial provide insight on some more advanced engineering capabilities 
+that the tutorial covers, but is not essential to understand the base concepts.  It does however give the reader a good 
+personal project idea if they wish to implement a more advanced tool.  
+
+Throughout the document I post hyperlinks to supplementary material that goes more in-depth about individual topics.  
+Often times, finding reliable information about a new topic is difficult and daunting, I therefore want to make the user 
+confident in the sources they explore.  Likewise, I posted a longer list of more comprehensive sources at the very bottom 
+of the tutorial that includes text book, related articles, blog posts, and other articles the reader might find helpful.  
+Many of these sources I used to create this tutorial, therefore I feel confident in providing them to the reader.  
