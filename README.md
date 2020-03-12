@@ -1,6 +1,6 @@
 # Understanding the C Memory Model and Process API
 
-## Prelude
+## Processes and Memory Models
 One fundamental feature of modern operating systems it the **Process** abstraction.
 
 A process a running program.  Loaded from disk onto memory, a process
@@ -60,10 +60,10 @@ int main(int argc, char** argv){
 	int stackVar = 10; 		 //Stack variable
 
 	char* heapData = malloc(10 * sizeof(char)); //a pointer to the start of a memory segment 
-											    //on the heap able to hold 10 char values
-												//NOTE: malloc does not initialize the data,
-												//whereas calloc initialized each block to zero.
-												//Otherwise malloc and calloc do the same thing.
+											//on the heap able to hold 10 char values
+											//NOTE: malloc does not initialize the data,
+											//whereas calloc initialized each block to zero.
+											//Otherwise malloc and calloc do the same thing.
     
 	free(heapData);  //returns (frees) the memory used by the heapData variable for future use
 
@@ -99,18 +99,18 @@ ready to run until a future event occurs.
 ```c
 //the structure of a process in the xv6 OS. Includes register context and state
 struct process {
-	char* mem;					//start of process memory
-	uint size;					//bottom of process memory
-	char* kstack;   			//bottom of the kernal stack for this process
-	enum proc_state state 		//process state
-	int pid;					//Process ID
-	struct proc* parent;	 	//parent process
-	void* chan;					//If !zero, sleeping on chan
-	int killed;					//if !zero, process killed
+	char* mem;				//start of process memory
+	uint size;				//bottom of process memory
+	char* kstack;   		//bottom of the kernal stack for this process
+	enum proc_state state 	//process state
+	int pid;				//Process ID
+	struct proc* parent;	//parent process
+	void* chan;				//If !zero, sleeping on chan
+	int killed;				//if !zero, process killed
 	struct file* ofile[NOFILE]; //Open files
-	struct inode *cwd;			//current directory
-	struct context context;		//switch here to run process
-	struct trapframe* ft;		//trap frame for the current interupt
+	struct inode *cwd;		//current directory
+	struct context context;	//switch here to run process
+	struct trapframe* ft;	//trap frame for the current interupt
 }
 ```
 # C Process API
