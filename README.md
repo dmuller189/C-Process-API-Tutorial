@@ -187,7 +187,7 @@ Specifically, `waitpid()` takes in the child-process ID to wait for, which can b
 Say you want to run a program that is different from the current calling program. `exec()`, and a corresponding `c` wrapper function helps do just this.  In the above example, the program calls `execlp()`, which in turn call the program `echo` with the arguments `"echo", "In", "subprocess", NULL`.
 In the example, `echo` is a program to simple print out its argumets to the terminal.
 
-## Putting it all Together - A Case Study with a Unix Shell
+# Putting it all Together - A Case Study with a Unix Shell
 
 Take a look at the code of this [Unix style Shell](https://github.com/dmuller189/UnixShell), and specifically the nush.c file in the directory.  This file implements the basic feature of a Unix shell by using the `fork() wait(), and exex()` system call to demonstrate the power of these operatoins.
 
@@ -198,16 +198,47 @@ The shell implements these following operators:
  - Background `&` e.g. `$sleep 10 &`
  - And `&&` e.g. `$true && echo one`
  - Or `||` e.g. `$true || echo one`
- - simple commands e.g. 
- 	 - `$echo one`
+ - simple commands `$command arg1 arg2...`
+ 	 - `$echo one two`
 	 - `$cat foo.txt`
 	 - `$pwd`
-	 - `sort foo2.txt`
+	 - `$sort foo2.txt`
 	 - ...etc
  
  Learn more about them [here](https://unix.meta.stackexchange.com/questions/3177/canonical-question-about-shell-operators)
 
- Let's first focus on executing a command in the background.  Conceptually, the background shell operator does what it says; it runs a process in the backgrund and allows the user to continue using the shell to execute more commands. 
+First let's see how a simple command is executed using `fork()` and `exec()`.
+
+Here's the important part of the function that demonstrated the forking we want to see.
+
+The function argument is a pointer to an abstract syntax tree that represents the user's command, but dont wory about those details.
+
+```c
+int simpleCommand(ast* tree) {
+	
+	char* cmd = tree->cmd->func; //gets command/program name to exec
+    int cpid;	//child process id
+
+    if((cpid = fork())) {
+        //parent process
+        int st;
+        waitpid(cpid, &st,0);	//waits for child process to run
+
+    } else {
+        //child process
+        return  execvp(cmd, tree->cmd->args);	//uses exec() to run the program 
+		//specified by the user
+        exit(-1);
+    }
+    return 0; 
+}
+```
+And that's it for a simple one line command without any fancy shell operators.
+The user enters into the shell a command to run, the program forks, execs in the child with the user's input, and the parent waits on the child.
+
+
+
+Now Let's focus on executing a command in the background.  Conceptually, the background shell operator does what it says; it runs a process in the backgrund and allows the user to continue using the shell to execute more commands. 
 
  ```c
  int backgroundCommand(ast* tree) { 
@@ -225,7 +256,8 @@ The shell implements these following operators:
     return 0;
 }
 ```
-The function argument is a pointer to an abstract syntax tree that represents the user's command, but dont wory about those details.  Notice how the functions creates the illusion of running a process in the background by simply forking, and then executing the command in the child process.  The `execTree()` function does this for us when in a child process.
+  Notice how the functions creates the illusion of running a process in the background by simply forking, and then executing the command in the child process.  The `execTree()` function does this for us when in a child process.  It's important that we don't wait in the parent right away, or else that would defeat the purpose of running in the background.  
+  If you're curious, a more advanced implementation would eventually wait at some point in order to avoid zombie processes.
 
 
 Let's take another slightly more complicated example.
