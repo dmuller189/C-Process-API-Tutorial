@@ -99,14 +99,14 @@ ready to run until a future event occurs.
 ```c
 //the structure of a process in the xv6 OS. Includes register context and state
 struct process {
-	char* mem;				//start of process memory
-	uint size;				//bottom of process memory
-	char* kstack;   		//bottom of the kernal stack for this process
+	char* mem;		//start of process memory
+	uint size;		//bottom of process memory
+	char* kstack;   //bottom of the kernal stack for this process
 	enum proc_state state 	//process state
-	int pid;				//Process ID
+	int pid;		//Process ID
 	struct proc* parent;	//parent process
-	void* chan;				//If !zero, sleeping on chan
-	int killed;				//if !zero, process killed
+	void* chan;		//If !zero, sleeping on chan
+	int killed;		//if !zero, process killed
 	struct file* ofile[NOFILE]; //Open files
 	struct inode *cwd;		//current directory
 	struct context context;	//switch here to run process
