@@ -71,26 +71,14 @@ int main(int argc, char** argv){
 }
 ```
 
-Here is a simple C program that utilized the various parts of the C memory model.  
-Although the program does not do much of anything (in fact global variable are an anti-pattern),
+Here is a simple C program that utilized the various parts of the C memory model. Although the program does not do much of anything (in fact global variable are an anti-pattern),
 it nonetheless displays how the stack, heap, and data sections are used when writing a C program.
 
 
 ## Running Multiple Processes and an Asside on Virtualization
 
-Another key feature of operating systems is the ability to create multiple 
-processes and seeming execute them at the same time.  This ability is a 
-result of cpu and memory **virtualization**.  The details and complexities of 
-virtualization are beyond the scope of this instructional, but an OS can
-create the illusion of runnning multiple processes at once with a 
-technique called **time sharing**.  The OS simple runs one process, stops it,
-runs another process, and continues for each process.  The mechanism for 
-switching processes is called **context switching**, and the OS decides
-to switch processes through a **scheduling policy**, which uses performance
-metrics, historical data, and workload information to make these decisions.
-Therefore, a process can be in a **running** state, or a **ready** state.
-A process can also be **blocked** if it performs a task that makes it not
-ready to run until a future event occurs. 
+Another key feature of operating systems is the ability to create multiple processes and seeming execute them at the same time.  This ability is a result of cpu and memory **virtualization**.  The details and complexities of virtualization are beyond the scope of this instructional, but an OS can create the illusion of runnning multiple processes at once with a technique called **time sharing**.  The OS simple runs one process, stops it,runs another process, and continues for each process.  The mechanism for switching processes is called **context switching**, and the OS decides to switch processes through a **scheduling policy**, which uses performance metrics, historical data, and workload information to make these decisions. Therefore, a process can be in a **running** state, or a **ready** state.
+A process can also be **blocked** if it performs a task that makes it not ready to run until a future event occurs. 
 
  An example is when a process asks the disk for I/O.  These transitions look someting like this:
 
@@ -192,7 +180,7 @@ In the example, `echo` is a program to simple print out its argumets to the term
 
 # Putting it all Together - A Case Study with a Unix Shell
 
-Take a look at the code of this [Unix style Shell](https://github.com/dmuller189/UnixShell), and specifically the nush.c file in the directory.  This file implements the basic feature of a Unix shell by using the `fork() wait(), and exex()` system call to demonstrate the power of these operatoins.
+Take a look at the code of this [Unix style Shell](https://github.com/dmuller189/UnixShell), and specifically the nush.c file in the directory.  This file implements the basic feature of a Unix shell by using the `fork() wait(), and exex()` system call and C wrapper functions.
 
 The shell implements these following operators:
  - Redirect input `<`  e.g. `$sort < foo.txt`
@@ -213,13 +201,13 @@ The shell implements these following operators:
 
 ### Using fork() and exec() to run a simple shell command
 First let's see how a simple command is executed using `fork()` and `exec()`.
-Here's the important part of the function that demonstrated the forking we want to see.
+Here's the important part of the function that demonstrates the forking we want to see.
 The function argument is a pointer to an abstract syntax tree that represents the user's command, but dont wory about those details.
 
 ```c
 int simpleCommand(ast* tree) {
 	
-	char* cmd = tree->cmd->func; //gets command/program name to exec
+char* cmd = tree->cmd->func; //gets command/program name to exec
     int cpid;	//child process id
 
     if((cpid = fork())) {
@@ -229,8 +217,7 @@ int simpleCommand(ast* tree) {
 
     } else {
         //child process
-        return  execvp(cmd, tree->cmd->args);	//uses exec() to run the program 
-		//specified by the user
+        return  execvp(cmd, tree->cmd->args);	//uses exec() to run the program specified by the user
         exit(-1);
     }
     return 0; 
@@ -252,8 +239,8 @@ Now Let's focus on executing a command in the background.  Conceptually, the bac
 		return 0;	
     } else {
     //child
-   		execTree(tree->left);
-    		_exit(0);
+   	execTree(tree->left);
+    _exit(0);
 
     }
     return 0;
