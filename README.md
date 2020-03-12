@@ -187,6 +187,9 @@ Specifically, `waitpid()` takes in the child-process ID to wait for, which can b
 Say you want to run a program that is different from the current calling program. `exec()`, and a corresponding `c` wrapper function helps do just this.  In the above example, the program calls `execlp()`, which in turn call the program `echo` with the arguments `"echo", "In", "subprocess", NULL`.
 In the example, `echo` is a program to simple print out its argumets to the terminal.
 
+## The `pipe()` System Call
+`pipe()` creates a one-way channel for data to pass betwen two processes.  That is, a pipe enables interprocess communication.  A pipe has a read 'end' and a write 'end', and the kernel buffers data written to the write end until it is read from the read end of the pipe.
+
 # Putting it all Together - A Case Study with a Unix Shell
 
 Take a look at the code of this [Unix style Shell](https://github.com/dmuller189/UnixShell), and specifically the nush.c file in the directory.  This file implements the basic feature of a Unix shell by using the `fork() wait(), and exex()` system call to demonstrate the power of these operatoins.
@@ -207,10 +210,10 @@ The shell implements these following operators:
  
  Learn more about them [here](https://unix.meta.stackexchange.com/questions/3177/canonical-question-about-shell-operators)
 
+
+### Using fork() and exec() to run a simple shell command
 First let's see how a simple command is executed using `fork()` and `exec()`.
-
 Here's the important part of the function that demonstrated the forking we want to see.
-
 The function argument is a pointer to an abstract syntax tree that represents the user's command, but dont wory about those details.
 
 ```c
@@ -237,9 +240,9 @@ And that's it for a simple one line command without any fancy shell operators.
 The user enters into the shell a command to run, the program forks, execs in the child with the user's input, and the parent waits on the child.
 
 
+### Using fork() to run a command in the Background
 
 Now Let's focus on executing a command in the background.  Conceptually, the background shell operator does what it says; it runs a process in the backgrund and allows the user to continue using the shell to execute more commands. 
-
  ```c
  int backgroundCommand(ast* tree) { 
     int cpid;
@@ -259,7 +262,57 @@ Now Let's focus on executing a command in the background.  Conceptually, the bac
   Notice how the functions creates the illusion of running a process in the background by simply forking, and then executing the command in the child process.  The `execTree()` function does this for us when in a child process.  It's important that we don't wait in the parent right away, or else that would defeat the purpose of running in the background.  
   If you're curious, a more advanced implementation would eventually wait at some point in order to avoid zombie processes.
 
+Let's take more complicated example.
+### Using fork() to Pipe
+<img align="right" src="./media/pipe.jpg" width="400px" alt="picture">
 
-Let's take another slightly more complicated example.
+As a mental model, a pipe connects two processes, and makes the standard output of one process the standard input of the other process.
+
+Here's what the code looks like for implementing a pipe shell operator:
+
+```c
+int pipeCommand(ast* tree) {
+    
+	int cpid;		//first child process
+	int cpid2;		//second child process
+	int fdrs[2];	//file descriptors to change standard in/out
+	//fdrs[0] for reading
+	//fdrs[1] for writing
+
+	if(cpid = fork()) {
+		//parent
+		waitpid(cpid,0,0);
+	} else {
+		//child
+		pipe(fdrs);	//open a pipe 
+		if(cpid2 = fork()) {
+			//child/parent
+			dup2(fdrs[0], 0);	//hook pipe to stadnard input
+			close(fdrs[1]);		//close other side of pipe
+			execTree(tree->right);	//execute command to the right of the pipe operator
+			waitpid(cpid2, 0, 0);
+		} else {
+			//child/child
+			dup2(fdrs[1], 1);	//hooks pipe to stdout
+			close(fdrs[0]);		//close other side of pipe
+			execTree(tree->left); // execute command to left of pipe operator
+		}
+	}
+}
+```
+This certainly looks more advanced, as we are callinf `fork()` inside of an outer `fork()`, which leaves us with four total processes.  Here'e the logic:
+
+Pipe: “command1	command 2”
+ - fork
+ - in child:
+	- pipe syscall
+	- fork
+ 	- in child/child: hook pipe to stdout, close other side
+ 	- in child/child: execute command1 (r)
+ 	- in child/parent: hook pipe to stdin, close other side
+ 	- in child/parent: execute command2 (r)
+ 	- in child/parent: wait on child/child
+- in parent: wait on child
+
 
 ~~~
