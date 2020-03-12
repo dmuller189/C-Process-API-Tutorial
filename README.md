@@ -47,7 +47,7 @@ passed around functions in the program lifetime.
 If the stack and heap memory adress pointers meet, then the program is
 effectively out of memory.
 
-## Basic C Program with stack and heap memory
+## A C Program with Stack and Heap Memory
 ```c
 #include <stdio.h>
 
@@ -102,7 +102,7 @@ struct process {
 	struct trapframe* ft;	//trap frame for the current interupt
 }
 ```
-# C Process API
+# The C Process API
 
 C provides system calls and function wrappers to create processes.  
 Specifically, these system calls are
@@ -181,7 +181,7 @@ In the example, `echo` is a program to simple print out its argumets to the term
 
 # Putting it all Together - A Case Study with a Unix Shell
 
-Take a look at the code of this [Unix style Shell](https://github.com/dmuller189/UnixShell), and specifically the nush.c file in the directory.  This file implements the basic feature of a Unix shell by using the `fork() wait(), and exex()` system call and C wrapper functions.
+Take a look at the code of this [Unix style Shell](https://github.com/dmuller189/UnixShell), and specifically the nush.c file in the directory.  This file implements the basic feature of a Unix shell by using the `fork()`, `wait()`, and `exex()` system call and C wrapper functions.
 
 The shell implements these following operators:
  - Redirect input `<`  e.g. `$sort < foo.txt`
@@ -304,3 +304,4 @@ Pipe: “command1	command 2”
 
 
 ~~~
+NOTE:  All code given was written and executed on the Debian 10 Linux distro, and will not work on Windows.
