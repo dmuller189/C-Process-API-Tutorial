@@ -21,6 +21,7 @@ The main components of the C memory model are:
 ### Data and Text Sections
 The Data section contains global and static data and variables
 associated with the program, and the text section is the written code itself.  
+
 Both are loaded from the executable file on disk.  The Data section can be
 broken down further into uninitialized and initialized segments, where
 values in the Uninitialized section are set to 0 before the execution
