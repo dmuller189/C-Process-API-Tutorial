@@ -200,7 +200,7 @@ The shell implements these following operators:
  Learn more about them [here](https://unix.meta.stackexchange.com/questions/3177/canonical-question-about-shell-operators)
 
 
-### Using fork() and exec() to run a simple shell command
+### Using `fork()` and `exec()` to Run a Simple Shell Command
 First let's see how a simple command is executed using `fork()` and `exec()`.
 Here's the important part of the function that demonstrates the forking we want to see.
 The function argument is a pointer to an abstract syntax tree that represents the user's command, but dont wory about those details.
@@ -228,7 +228,7 @@ And that's it for a simple one line command without any fancy shell operators.
 The user enters into the shell a command to run, the program forks, execs in the child with the user's input, and the parent waits on the child.
 
 
-### Using fork() to run a command in the Background
+### Using `fork()` to Run a Program in the Background
 
 Now Let's focus on executing a command in the background.  Conceptually, the background shell operator does what it says; it runs a process in the backgrund and allows the user to continue using the shell to execute more commands. 
  ```c
@@ -251,7 +251,7 @@ Now Let's focus on executing a command in the background.  Conceptually, the bac
   If you're curious, a more advanced implementation would eventually wait at some point in order to avoid zombie processes.
 
 Let's take more complicated example.
-### Using fork() to Pipe
+### Using `fork()`s to Pipe Input and Output
 <img align="right" src="./media/pipes.jpg" width="400px" alt="picture">
 
 As a mental model, a pipe connects two processes, and makes the standard output of one process the standard input of the other process.
@@ -288,7 +288,7 @@ int pipeCommand(ast* tree) {
 	}
 }
 ```
-This certainly looks more advanced, as we are callinf `fork()` inside of an outer `fork()`, which leaves us with four total processes.  Here'e the logic:
+This certainly looks more advanced, as we are callins `fork()` inside of an outer `fork()`, which leaves us with four total processes.  Here'e the logic:
 
 Pipe: “command1	command 2”
  - fork
@@ -302,6 +302,7 @@ Pipe: “command1	command 2”
  	- in child/parent: wait on child/child
 - in parent: wait on child
 
+# Further Reading
 
 ~~~
 NOTE:  All code given was written and executed on the Debian 10 Linux distro, and will not work on Windows.
