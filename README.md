@@ -101,14 +101,14 @@ ready to run until a future event occurs.
 struct process {
 	char* mem;		//start of process memory
 	uint size;		//bottom of process memory
-	char* kstack;   //bottom of the kernal stack for this process
+	char* kstack;   	//bottom of the kernal stack for this process
 	enum proc_state state 	//process state
 	int pid;		//Process ID
 	struct proc* parent;	//parent process
 	void* chan;		//If !zero, sleeping on chan
 	int killed;		//if !zero, process killed
 	struct file* ofile[NOFILE]; //Open files
-	struct inode *cwd;		//current directory
+	struct inode *cwd;	//current directory
 	struct context context;	//switch here to run process
 	struct trapframe* ft;	//trap frame for the current interupt
 }
