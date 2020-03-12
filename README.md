@@ -29,7 +29,7 @@ of the program, but for now this distinction is unimportant.
   
 ### The Stack and the Heap
 These sections are not loaded from disk, but rather represent segments in
-memory that can grow and shrink ase the process runs and uses memory.
+memory that can grow and shrink as the process runs and uses memory.
 The stack is a dynamically sized region in memory that grows from the
 top of the memory adress space downward, and contains local variables,
 and information when functions are called, such as deep recursive calls.
@@ -58,7 +58,7 @@ int main(int argc, char** argv){
 
 	static int uninitStatic;  //static uninitialized variable stored in the uninitialized Data section
 
-	int stackVar = 10; 		 //Stack variable
+	int stackVar = 10;	//Stack variable
 
 	char* heapData = malloc(10 * sizeof(char)); //a pointer to the start of a memory segment 
 							//on the heap able to hold 10 char values
@@ -290,7 +290,7 @@ int pipeCommand(ast* tree) {
 ```
 This certainly looks more advanced, as we are callins `fork()` inside of an outer `fork()`, which leaves us with four total processes.  Here'e the logic:
 
-Pipe: “command1	command 2”
+Pipe: `$command1 | command 2`
  - fork
  - in child:
 	- pipe syscall
@@ -303,6 +303,6 @@ Pipe: “command1	command 2”
 - in parent: wait on child
 
 # Further Reading
-
+TODO
 ~~~
 NOTE:  All code given was written and executed on the Debian 10 Linux distro, and will not work on Windows.
