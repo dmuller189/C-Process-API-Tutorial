@@ -60,10 +60,10 @@ int main(int argc, char** argv){
 	int stackVar = 10; 		 //Stack variable
 
 	char* heapData = malloc(10 * sizeof(char)); //a pointer to the start of a memory segment 
-											//on the heap able to hold 10 char values
-											//NOTE: malloc does not initialize the data,
-											//whereas calloc initialized each block to zero.
-											//Otherwise malloc and calloc do the same thing.
+						//on the heap able to hold 10 char values
+						//NOTE: malloc does not initialize the data,
+						//whereas calloc initialized each block to zero.
+						//Otherwise malloc and calloc do the same thing.
     
 	free(heapData);  //returns (frees) the memory used by the heapData variable for future use
 
