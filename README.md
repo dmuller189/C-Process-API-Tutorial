@@ -252,7 +252,7 @@ Now Let's focus on executing a command in the background.  Conceptually, the bac
 
 Let's take more complicated example.
 ### Using fork() to Pipe
-<img align="right" src="./media/pipe.jpg" width="400px" alt="picture">
+<img align="right" src="./media/pipes.jpg" width="400px" alt="picture">
 
 As a mental model, a pipe connects two processes, and makes the standard output of one process the standard input of the other process.
 
