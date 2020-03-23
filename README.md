@@ -1,10 +1,10 @@
 # Understanding the C Memory Model and Multi-Processing
 
 ## Processes and Memory Models
-One fundamental feature of modern operating systems it the **Process** abstraction.
+One fundamental feature of modern operating systems is the **Process** abstraction.
 
 A process a running program.  Loaded from disk onto memory, a process
-is the execution of a set of instruction, and holds a memory adress space,
+is the execution of a set of instruction, and holds a memory address space,
 register values, and other information needed to run.
 
 Consider this diagram of the C memory model.
@@ -31,7 +31,7 @@ of the program, but for now this distinction is unimportant.
 These sections are not loaded from disk, but rather represent segments in
 memory that can grow and shrink as the process runs and uses memory.
 The stack is a dynamically sized region in memory that grows from the
-top of the memory adress space downward, and contains local variables,
+top of the memory address space downward, and contains local variables,
 and information when functions are called, such as deep recursive calls.
 
 The heap is a dynamic memory segment that grows from the bottom up, and
@@ -40,11 +40,11 @@ request and give up memory by the program.  Heap data is useful for
 variable sized data, and for creating structures that need to exits
 beyond the scope of the functions they are defined.
 
-In essesence, the stack is for local and more temporary variables/data,
+In essence, the stack is for local and more temporary variables/data,
 while the heap is for longer lasting and variable sized data that is 
 passed around functions in the program lifetime.
 
-If the stack and heap memory adress pointers meet, then the program is
+If the stack and heap memory address pointers meet, then the program is
 effectively out of memory.
 
 ## A C Program with Stack and Heap Memory
@@ -76,12 +76,12 @@ Here is a simple C program that utilized the various parts of the C memory model
 it nonetheless displays how the stack, heap, and data sections are used when writing a C program.
 
 
-## Running Multiple Processes and an Asside on Virtualization
+## Running Multiple Processes and Virtualization
 
-Another key feature of operating systems is the ability to create multiple processes and seeming execute them at the same time.  This ability is a result of cpu and memory **virtualization**.  The details and complexities of virtualization are beyond the scope of this instructional, but an OS can create the illusion of runnning multiple processes at once with a technique called **time sharing**.  The OS simple runs one process, stops it,runs another process, and continues for each process.  The mechanism for switching processes is called **context switching**, and the OS decides to switch processes through a **scheduling policy**, which uses performance metrics, historical data, and workload information to make these decisions. Therefore, a process can be in a **running** state, or a **ready** state.
+Another key feature of operating systems is the ability to create multiple processes and seeming execute them at the same time.  This ability is a result of cpu and memory **virtualization**.  The details and complexities of virtualization are beyond the scope of this instructional, but an OS can create the illusion of running multiple processes at once with a technique called **time sharing**.  The OS simple runs one process, stops it, runs another process, and continues for each process.  The mechanism for switching processes is called **context switching**, and the OS decides to switch processes through a **scheduling policy**, which uses performance metrics, historical data, and workload information to make these decisions. Therefore, a process can be in a **running** state, or a **ready** state.
 A process can also be **blocked** if it performs a task that makes it not ready to run until a future event occurs. 
 
- An example is when a process asks the disk for I/O.  These transitions look someting like this:
+ An example is when a process asks the disk for I/O.  These transitions look something like this:
 
 <img align="right" src="./media/processTransition.jpg" width="400px" alt="picture">
 
@@ -90,7 +90,7 @@ A process can also be **blocked** if it performs a task that makes it not ready 
 struct process {
 	char* mem;		//start of process memory
 	uint size;		//bottom of process memory
-	char* kstack;   	//bottom of the kernal stack for this process
+	char* kstack;   	//bottom of the kernel stack for this process
 	enum proc_state state 	//process state
 	int pid;		//Process ID
 	struct proc* parent;	//parent process
@@ -99,7 +99,7 @@ struct process {
 	struct file* ofile[NOFILE]; //Open files
 	struct inode *cwd;	//current directory
 	struct context context;	//switch here to run process
-	struct trapframe* ft;	//trap frame for the current interupt
+	struct trapframe* ft;	//trap frame for the current interrupt
 }
 ```
 # The C Process API
@@ -108,11 +108,11 @@ C provides system calls and function wrappers to create processes.
 Specifically, these system calls are
 `fork()`, `exec()`, and `wait().`
 When combined, these system calls can be used to run concurrent programs and
-reap the benefits of multicore processesors and parallelized systems.
+reap the benefits of multicore processors and parallelized systems.
 
 ## The `fork()` System Call
 Simply put, calling `fork()` creates a new process. 
-More specifically, calling `fork()` coppies the current process and creates a new **child** process.
+More specifically, calling `fork()` copies the current process and creates a new **child** process.
 The child process will then execute immediately from where it was called in the **parent** process.
 
 Consider this c code demonstrating `fork()`
@@ -149,7 +149,7 @@ main(int _ac, char* _av[])
     return 0;
 }
 ```
-We introduced `wait()` and `exec()` in this example, but dont worry if they dont make sense at the moment.
+We introduced `wait()` and `exec()` in this example, but don't worry if they don't make sense at the moment.
 We'll explain them shortly.  
 For now focus on the syntax of `fork()`.
 
@@ -160,12 +160,12 @@ child process causes the program to execute the `false` portion of the `if` stat
 processes are running different blocks of code. 
 
 An interesting effect of running different processes is **non-determinism**.  The cpu scheduler
-as described above chooses which process to run at som moment in time, so we can't be sure which
+as described above chooses which process to run at some moment in time, so we can't be sure which
 process will run first and which will run later.
 
 ## The `wait()` System Call
 
-In certain situation, if may be useful to wait for a child process to finish running before we continue executing parent-process code.  This is especcially true if we have many child processes
+In certain situation, if may be useful to wait for a child process to finish running before we continue executing parent-process code.  This is especially true if we have many child processes
 running that take a long time to finish.  We don't want to use the results of child-process work in a parent process if those children are not complete.  
 
 `wait()` solves this problem for us. `c` provides a wrapper function called `waitpid()` that
@@ -174,10 +174,10 @@ Specifically, `waitpid()` takes in the child-process ID to wait for, which can b
 
 ## The `exec()` System Call
 Say you want to run a program that is different from the current calling program. `exec()`, and a corresponding `c` wrapper function helps do just this.  In the above example, the program calls `execlp()`, which in turn call the program `echo` with the arguments `"echo", "In", "subprocess", NULL`.
-In the example, `echo` is a program to simple print out its argumets to the terminal.
+In the example, `echo` is a program to simple print out its arguments to the terminal.
 
 ## The `pipe()` System Call
-`pipe()` creates a one-way channel for data to pass betwen two processes.  That is, a pipe enables interprocess communication.  A pipe has a read 'end' and a write 'end', and the kernel buffers data written to the write end until it is read from the read end of the pipe.
+`pipe()` creates a one-way channel for data to pass between two processes.  That is, a pipe enables interprocess communication.  A pipe has a read 'end' and a write 'end', and the kernel buffers data written to the write end until it is read from the read end of the pipe.
 
 # Putting it all Together - A Case Study with a Unix Shell
 
@@ -203,7 +203,7 @@ The shell implements these following operators:
 ### Using `fork()` and `exec()` to Run a Simple Shell Command
 First let's see how a simple command is executed using `fork()` and `exec()`.
 Here's the important part of the function that demonstrates the forking we want to see.
-The function argument is a pointer to an abstract syntax tree that represents the user's command, but dont wory about those details.
+The function argument is a pointer to an abstract syntax tree that represents the user's command, but don't worry about those details.
 
 ```c
 int simpleCommand(ast* tree) {
@@ -230,7 +230,7 @@ The user enters into the shell a command to run, the program forks, execs in the
 
 ### Using `fork()` to Run a Program in the Background
 
-Now Let's focus on executing a command in the background.  Conceptually, the background shell operator does what it says; it runs a process in the backgrund and allows the user to continue using the shell to execute more commands. 
+Now Let's focus on executing a command in the background.  Conceptually, the background shell operator does what it says; it runs a process in the background and allows the user to continue using the shell to execute more commands. 
  ```c
  int backgroundCommand(ast* tree) { 
     int cpid;
@@ -288,7 +288,7 @@ int pipeCommand(ast* tree) {
 	}
 }
 ```
-This certainly looks more advanced, as we are callins `fork()` inside of an outer `fork()`, which leaves us with four total processes.  Here'e the logic:
+This certainly looks more advanced, as we are calling `fork()` inside of an outer `fork()`, which leaves us with four total processes.  Here's the logic:
 
 Pipe: `$command1 | command 2`
  - fork
