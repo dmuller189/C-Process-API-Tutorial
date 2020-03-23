@@ -5,11 +5,12 @@ One fundamental feature of modern operating systems is the **Process** abstracti
 
 A process a running program.  Loaded from disk onto memory, a process
 is the execution of a set of instruction, and holds a memory address space,
-register values, and other information needed to run.
+**register** values, and other information needed to run, such as execution **threads** and metadata. Before we get deeper into process details and how to work with them in C, consider this diagram of the C memory model.  
 
-Consider this diagram of the C memory model.
 <img align="right" src="./media/memoryLayoutC.jpg" width="400px" alt="picture">
 
+
+A program's memory model is the layout and discription any of memory usage, and likewise allows the compiler to perform code optimizations to boost runtime performance.
 
 
 The main components of the C memory model are:
@@ -76,7 +77,7 @@ Here is a simple C program that utilized the various parts of the C memory model
 it nonetheless displays how the stack, heap, and data sections are used when writing a C program.
 
 
-## Running Multiple Processes and Virtualization
+##  Virtualization and Running Multiple Processes
 
 Another key feature of operating systems is the ability to create multiple processes and seeming execute them at the same time.  This ability is a result of cpu and memory **virtualization**.  The details and complexities of virtualization are beyond the scope of this instructional, but an OS can create the illusion of running multiple processes at once with a technique called **time sharing**.  The OS simple runs one process, stops it, runs another process, and continues for each process.  The mechanism for switching processes is called **context switching**, and the OS decides to switch processes through a **scheduling policy**, which uses performance metrics, historical data, and workload information to make these decisions. Therefore, a process can be in a **running** state, or a **ready** state.
 A process can also be **blocked** if it performs a task that makes it not ready to run until a future event occurs. 
