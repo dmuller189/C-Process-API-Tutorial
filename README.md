@@ -82,7 +82,6 @@ Another key feature of operating systems is the ability to create multiple proce
 A process can also be **blocked** if it performs a task that makes it not ready to run until a future event occurs. 
 
  An example is when a process asks the disk for I/O.  These transitions look something like this:
-
 <img align="right" src="./media/processTransition.jpg" width="400px" alt="picture">
 
 ```c
@@ -302,7 +301,13 @@ Pipe: `$command1 | command 2`
  	- in child/parent: wait on child/child
 - in parent: wait on child
 
-# Further Reading
-TODO
+# Further Reading and Bibliography
+- Arpaci-Dusseau, Remzi H., and Andrea C. Arpaci-Dusseau. Operating Systems: Three Easy Pieces. 1.00 ed., Arpaci-Dusseau Books, 2018.
+
+- Bryant, Randal E., and David R. O'Hallaron. Computer Systems: a Programmer's Perspective. Pearson, 2019.
+
+- Kangralkar, Narendra. “Memory Layout of C Programs.” Geeksforkeeks.org, www.geeksforgeeks.org/memory-layout-of-c-program/.
+
+- Patel, Kadam. “Non-Blocking I/O with Pipes in C.” Geeksforkeeks.org, www.geeksforgeeks.org/non-blocking-io-with-pipes-in-c/.
 ~~~
 NOTE:  All code given was written and executed on the Debian 10 Linux distro, and will not work on Windows.
